@@ -277,7 +277,7 @@ MonoBehaviour:
   host: http://127.0.0.1
   port: 3030
   idUri: id
-  postUri: 
+  postUri: userdata
   btnGetExample: {fileID: 2011798990}
   btnPostExample: {fileID: 7996408}
   id: 1001

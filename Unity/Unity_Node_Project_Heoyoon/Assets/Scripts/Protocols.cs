@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Protocals : MonoBehaviour
+public class Protocols
 {
     public class Packets
     {
