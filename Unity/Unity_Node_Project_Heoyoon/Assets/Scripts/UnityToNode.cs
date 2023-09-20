@@ -11,11 +11,17 @@ public class UnityToNode : MonoBehaviour
     public string host;                 //127.0.0.1 
     public int port;                    //3030
 
-    public string idUri;                //경로 주소 설정
-    public string postUri;
+    public string idUrl;                //경로 주소 설정
+    public string postUrl;
+    public string resDataUrl;
+    public string startConstructionUrl;
+    public string checkConstructionUrl;
 
     public Button btnGetExample;
     public Button btnPostExample;
+    public Button btnResDataExample;
+    public Button btnConstruction_Post;
+    public Button btnConstruction_Get;
 
     public int id;
     public string data;
@@ -24,29 +30,83 @@ public class UnityToNode : MonoBehaviour
     {
         this.btnPostExample.onClick.AddListener(() =>
         {
-            var url = string.Format("{0}:{1}/{2}", host, port, postUri);      //URL 주소 생성
+            var url = string.Format("{0}:{1}/{2}", host, port, postUrl);      //URL 주소 생성
             Debug.Log(url);
+
             var req = new Protocols.Packets.req_data();                         //Req 프로토콜 데이터 입력
             req.cmd = 1000;
             req.id = id;
             req.data = data;
             var json = JsonConvert.SerializeObject(req);
             Debug.Log(json);
+
             StartCoroutine(this.PostData(url, json, (raw) =>
             {
                 Protocols.Packets.common res = JsonConvert.DeserializeObject<Protocols.Packets.common>(raw);
                 Debug.LogFormat("{0}, {1}", res.cmd, res.message);
             }));
+
         });
 
         this.btnGetExample.onClick.AddListener(() =>
         {
-            var url = string.Format("{0}:{1}/{2}", host, port, idUri);      //URL 주소 생성
+            var url = string.Format("{0}:{1}/{2}", host, port, idUrl);      //URL 주소 생성
             Debug.Log(url);
+
             StartCoroutine(this.GetData(url, (raw) =>
             {
                 var res = JsonConvert.DeserializeObject<Protocols.Packets.common>(raw);       //JSON 변환
+
                 Debug.LogFormat("{0}, {1}", res.cmd, res.message);          //디버그로그로 서버에서 보내준것 확인
+            }));
+
+        });
+
+        this.btnResDataExample.onClick.AddListener(() =>
+        {
+            var url = string.Format("{0}:{1}/{2}", host, port, resDataUrl);      //URL 주소 생성
+            Debug.Log(url);
+
+            StartCoroutine(this.GetData(url, (raw) =>
+            {
+                var res = JsonConvert.DeserializeObject<Protocols.Packets.res_data>(raw);       //JSON 변환
+
+                foreach (var user in res.result)
+                {
+                    Debug.LogFormat("{0}, {1}", user.id, user.data);          //디버그로그로 서버에서 보내준것 확인
+                }
+
+            }));
+        });
+
+        this.btnConstruction_Post.onClick.AddListener(() =>         //건설 시작 POST 통신
+        {
+            var url = string.Format("{0}:{1}/{2}", host, port, startConstructionUrl);//URL 주소 생성
+            Debug.Log(url);
+
+            var req = new Protocols.Packets.req_data();                 //프로토콜을 만들어준다
+            req.cmd = 1000;
+            req.id = id;
+            req.data = data;
+            var json = JsonConvert.SerializeObject(req);
+            Debug.Log(json);
+
+            StartCoroutine(this.PostData(url, json, (raw) =>
+            {
+                Protocols.Packets.common res = JsonConvert.DeserializeObject<Protocols.Packets.common>(raw);
+                Debug.Log(res);
+            }));
+        });
+
+        this.btnConstruction_Get.onClick.AddListener(() =>
+        {
+            var url = string.Format("{0}:{1}/{2}", host, port, checkConstructionUrl);
+            Debug.Log(url);
+
+            StartCoroutine(this.GetData(url, (raw) =>
+            {
+                var res = JsonConvert.DeserializeObject<Protocols.Packets.common>(raw);
+                Debug.LogFormat("{0},{1}", res.cmd, res.message);
             }));
         });
     }
@@ -89,11 +149,8 @@ public class UnityToNode : MonoBehaviour
         {
             Debug.LogFormat("{0}\n{1}\n{2}", webRequest.responseCode, webRequest.downloadHandler.data, webRequest.downloadHandler.text);
             callback(webRequest.downloadHandler.text);
-            
         }
 
         webRequest.Dispose();       //연결 해제 (없으면 메모리 누수)
     }
-
-
 }

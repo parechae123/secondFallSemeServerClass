@@ -17,5 +17,15 @@ public class Protocols
             public int id;
             public string data;
         }
+        public class res_data : common  //받을 배열 패킷 설정 
+        {
+            public req_data[] result;
+        }
+
+        public class ConstructionStatusResponse     //건설 패킷 설정
+        {
+            public string message;
+        }
     }
+
 }
