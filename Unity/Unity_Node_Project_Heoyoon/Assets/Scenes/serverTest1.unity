@@ -274,7 +274,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32e4bf09a375a4746b31a35c6aa31d53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  host: https://port-0-node-express-heoyoony-jvpb2aln15y04e.sel5.cloudtype.app/
+  host: https://port-0-node-express-heoyoony-jvpb2aln15y04e.sel5.cloudtype.app
   port: 3000
   idUrl: 
   postUrl: userdata
@@ -454,7 +454,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Button
+  m_Text: Post Button
 --- !u!222 &548495958
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -534,7 +534,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Button
+  m_Text: Get Button
 --- !u!222 &748109188
 CanvasRenderer:
   m_ObjectHideFlags: 0

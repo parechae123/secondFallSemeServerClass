@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,7 +11,7 @@ public class UnityToNode : MonoBehaviour
     public string host;                 //127.0.0.1 
     public int port;                    //3030
 
-    public string idUrl;                //°æ·Î ÁÖ¼Ò ¼³Á¤
+    public string idUrl;                //ê²½ë¡œ ì£¼ì†Œ ì„¤ì •
     public string postUrl;
     public string resDataUrl;
     public string startConstructionUrl;
@@ -30,10 +30,10 @@ public class UnityToNode : MonoBehaviour
     {
         this.btnPostExample.onClick.AddListener(() =>
         {
-            var url = string.Format("{0}:{1}/{2}", host, port, postUrl);      //URL ÁÖ¼Ò »ı¼º
+            var url = string.Format("{0}/{2}", host, port, postUrl);      //URL ì£¼ì†Œ ìƒì„±
             Debug.Log(url);
 
-            var req = new Protocols.Packets.req_data();                         //Req ÇÁ·ÎÅäÄİ µ¥ÀÌÅÍ ÀÔ·Â
+            var req = new Protocols.Packets.req_data();                         //Req í”„ë¡œí† ì½œ ë°ì´í„° ì…ë ¥
             req.cmd = 1000;
             req.id = id;
             req.data = data;
@@ -50,41 +50,41 @@ public class UnityToNode : MonoBehaviour
 
         this.btnGetExample.onClick.AddListener(() =>
         {
-            var url = string.Format("{0}:{1}/{2}", host, port, idUrl);      //URL ÁÖ¼Ò »ı¼º
+            var url = string.Format("{0}/{2}", host, port, idUrl);      //URL ì£¼ì†Œ ìƒì„±
             Debug.Log(url);
 
             StartCoroutine(this.GetData(url, (raw) =>
             {
-                var res = JsonConvert.DeserializeObject<Protocols.Packets.common>(raw);       //JSON º¯È¯
+                var res = JsonConvert.DeserializeObject<Protocols.Packets.common>(raw);       //JSON ë³€í™˜
 
-                Debug.LogFormat("{0}, {1}", res.cmd, res.message);          //µğ¹ö±×·Î±×·Î ¼­¹ö¿¡¼­ º¸³»ÁØ°Í È®ÀÎ
+                Debug.LogFormat("{0}, {1}", res.cmd, res.message);          //ë””ë²„ê·¸ë¡œê·¸ë¡œ ì„œë²„ì—ì„œ ë³´ë‚´ì¤€ê²ƒ í™•ì¸
             }));
 
         });
 
         this.btnResDataExample.onClick.AddListener(() =>
         {
-            var url = string.Format("{0}:{1}/{2}", host, port, resDataUrl);      //URL ÁÖ¼Ò »ı¼º
+            var url = string.Format("{0}/{2}", host, port, resDataUrl);      //URL ì£¼ì†Œ ìƒì„±
             Debug.Log(url);
 
             StartCoroutine(this.GetData(url, (raw) =>
             {
-                var res = JsonConvert.DeserializeObject<Protocols.Packets.res_data>(raw);       //JSON º¯È¯
+                var res = JsonConvert.DeserializeObject<Protocols.Packets.res_data>(raw);       //JSON ë³€í™˜
 
                 foreach (var user in res.result)
                 {
-                    Debug.LogFormat("{0}, {1}", user.id, user.data);          //µğ¹ö±×·Î±×·Î ¼­¹ö¿¡¼­ º¸³»ÁØ°Í È®ÀÎ
+                    Debug.LogFormat("{0}, {1}", user.id, user.data);          //ë””ë²„ê·¸ë¡œê·¸ë¡œ ì„œë²„ì—ì„œ ë³´ë‚´ì¤€ê²ƒ í™•ì¸
                 }
 
             }));
         });
 
-        this.btnConstruction_Post.onClick.AddListener(() =>         //°Ç¼³ ½ÃÀÛ POST Åë½Å
+        this.btnConstruction_Post.onClick.AddListener(() =>             //ê±´ì„¤ ì‹œì‘ POST í†µì‹  
         {
-            var url = string.Format("{0}:{1}/{2}", host, port, startConstructionUrl);//URL ÁÖ¼Ò »ı¼º
+            var url = string.Format("{0}/{2}", host, port, startConstructionUrl);      //URL ì£¼ì†Œ ìƒì„±
             Debug.Log(url);
 
-            var req = new Protocols.Packets.req_data();                 //ÇÁ·ÎÅäÄİÀ» ¸¸µé¾îÁØ´Ù
+            var req = new Protocols.Packets.req_data();                                 //í”„ë¡œí† ì½œì„ ë§Œë“¤ì–´ì¤€ë‹¤. 
             req.cmd = 1000;
             req.id = id;
             req.data = data;
@@ -98,32 +98,32 @@ public class UnityToNode : MonoBehaviour
             }));
         });
 
-        this.btnConstruction_Get.onClick.AddListener(() =>
+        this.btnConstruction_Get.onClick.AddListener(() =>              //ê±´ì„¤ í™•ì¸ GET í†µì‹ 
         {
-            var url = string.Format("{0}:{1}/{2}", host, port, checkConstructionUrl);
+            var url = string.Format("{0}/{2}", host, port, checkConstructionUrl);      //URL ì£¼ì†Œ ìƒì„±
             Debug.Log(url);
 
             StartCoroutine(this.GetData(url, (raw) =>
             {
                 var res = JsonConvert.DeserializeObject<Protocols.Packets.common>(raw);
-                Debug.LogFormat("{0},{1}", res.cmd, res.message);
+                Debug.LogFormat("{0}, {1}", res.cmd, res.message);
             }));
         });
     }
 
     private IEnumerator GetData(string url, System.Action<string> callback)
     {
-        var webRequest = UnityWebRequest.Get(url);                //À¯´ÏÆ¼ ÇÔ¼ö UnityWebRequestÀÇ Get
-        yield return webRequest.SendWebRequest();                   //Åë½ÅÀÌ µ¹¾Æ¿Ã¶§ ±îÁö ÄÚ·çÆ¾ ´ë±â
+        var webRequest = UnityWebRequest.Get(url);                //ìœ ë‹ˆí‹° í•¨ìˆ˜ UnityWebRequestì˜ Get
+        yield return webRequest.SendWebRequest();                   //í†µì‹ ì´ ëŒì•„ì˜¬ë•Œ ê¹Œì§€ ì½”ë£¨í‹´ ëŒ€ê¸°
 
         Debug.Log("-->" + webRequest.downloadHandler.text);
 
-        if (webRequest.result == UnityWebRequest.Result.ConnectionError ||   //Ä¿³Ø¼Ç Error ÀÌ°Å³ª
-            webRequest.result == UnityWebRequest.Result.ProtocolError)      //ÇÁ·ÎÅäÄİ Error ÀÏ°æ¿ì
+        if (webRequest.result == UnityWebRequest.Result.ConnectionError ||   //ì»¤ë„¥ì…˜ Error ì´ê±°ë‚˜
+            webRequest.result == UnityWebRequest.Result.ProtocolError)      //í”„ë¡œí† ì½œ Error ì¼ê²½ìš°
         {
-            Debug.Log("¼­¹ö Åë½Å ¿¡·¯");
+            Debug.Log("ì„œë²„ í†µì‹  ì—ëŸ¬");
         }
-        else  //¿¡·¯°¡ ¾øÀ» °æ¿ì
+        else  //ì—ëŸ¬ê°€ ì—†ì„ ê²½ìš°
         {
             callback(webRequest.downloadHandler.text);
         }
@@ -132,7 +132,7 @@ public class UnityToNode : MonoBehaviour
     private IEnumerator PostData(string url, string json, System.Action<string> callback)
     {
         var webRequest = new UnityWebRequest(url, "POST");
-        var bodyRaw = Encoding.UTF8.GetBytes(json);     //json ÀÎÄÚµù 
+        var bodyRaw = Encoding.UTF8.GetBytes(json);     //json ì¸ì½”ë”© 
 
         webRequest.uploadHandler = new UploadHandlerRaw(bodyRaw);
         webRequest.downloadHandler = new DownloadHandlerBuffer();
@@ -140,17 +140,19 @@ public class UnityToNode : MonoBehaviour
 
         yield return webRequest.SendWebRequest();
 
-        if (webRequest.result == UnityWebRequest.Result.ConnectionError ||   //Ä¿³Ø¼Ç Error ÀÌ°Å³ª
-           webRequest.result == UnityWebRequest.Result.ProtocolError)      //ÇÁ·ÎÅäÄİ Error ÀÏ°æ¿ì
+        if (webRequest.result == UnityWebRequest.Result.ConnectionError ||   //ì»¤ë„¥ì…˜ Error ì´ê±°ë‚˜
+           webRequest.result == UnityWebRequest.Result.ProtocolError)      //í”„ë¡œí† ì½œ Error ì¼ê²½ìš°
         {
-            Debug.Log("¼­¹ö Åë½Å ¿¡·¯");
+            Debug.Log("ì„œë²„ í†µì‹  ì—ëŸ¬");
         }
-        else  //¿¡·¯°¡ ¾øÀ» °æ¿ì
+        else  //ì—ëŸ¬ê°€ ì—†ì„ ê²½ìš°
         {
             Debug.LogFormat("{0}\n{1}\n{2}", webRequest.responseCode, webRequest.downloadHandler.data, webRequest.downloadHandler.text);
             callback(webRequest.downloadHandler.text);
         }
 
-        webRequest.Dispose();       //¿¬°á ÇØÁ¦ (¾øÀ¸¸é ¸Ş¸ğ¸® ´©¼ö)
+        webRequest.Dispose();       //ì—°ê²° í•´ì œ (ì—†ìœ¼ë©´ ë©”ëª¨ë¦¬ ëˆ„ìˆ˜)
     }
+
+
 }
