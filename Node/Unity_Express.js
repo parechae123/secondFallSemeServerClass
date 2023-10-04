@@ -4,66 +4,68 @@ const app = express();
 let users = [
     { id: 0, data: "UserData"}              //배열안에 오브젝트
 ];
-let buildingUnderConstuction = null; //시간 데이터를 저장한다.
+
+let buildingUnderConstuction  = null;       //시간 데이터를 저장한다. 
 //let buildingUnderConstuction[10][10] + 오브젝트 형태가 들어가게
 
 app.use(express.json());                   //json을 사용하겠다.
 
-//-------------------- GAME LOGIC------------------
-app.post('/startConstruction',(req,res) =>
-{
-    const currentTime = new Date();         //스타트시 const로 시간을 고정해준다. DB ->로 저장할때는 형태 결정해야함
-    const constructionTime = new Date(currentTime.getTime() + 10000); //현재 시간으로부터 10초뒤로 저장(건물 완성 10초)
-    buildingUnderConstuction = constructionTime;        //완성 시간을 전역으로
 
-    let result = {                      //구조를 나중에 자세하게 설정
+//====================== GAME LOGIC ===========================
+
+app.post('/startConstruction' , (req, res) => {
+    
+    const currentTime = new Date();             //스타트시 const로 시간을 고정해준다. DB ->로 저장할때는 형태 결정해야함
+    const constructionTime = new Date(currentTime.getTime() + 10000); //현재 시간으로부터 10초뒤로 저장(건물 완성 10초)
+    buildingUnderConstuction = constructionTime;                //완성 시간을 전역으로
+
+    let result = {                              //구조를 나중에 자세하게 설정
         message : buildingUnderConstuction
     };
-    console.log("System : 건설 시작");
 
-    res.send({                      //기본 커캔드로 전송
-        cmd : 1101,
+    console.log(" SYSTEM : 건설 시작 ");
+
+    res.send({                                  //기본 커맨드로 전송 
+        cmd : 1101, 
         message : "SYSTEM : 건설 시작",
         result
-    })
+    });
 });
 
-app.get('/checkConstruction',(req,res)=>{
-    if(buildingUnderConstuction && new Date()>= buildingUnderConstuction)       //시간이 지났으면
+app.get('/checkConstruction' , (req, res) => {
+    if(buildingUnderConstuction && new Date() >= buildingUnderConstuction)        //시간이 지났으면
     {
-        buildingUnderConstuction = null;
-
+        buildingUnderConstuction = null;                                           //시간 초기화
         let result = {
             message : buildingUnderConstuction
         }
-
-        console.log("SYSTEM : 건설완료");
-        res.send({
-            cmd : 1101,
-            message : "SYSTEM : 건설 시작",
+        console.log(" SYSTEM : 건설 완료 ");
+        res.send ({                                  //기본 커맨드로 전송 
+            cmd : 1101, 
+            message : "SYSTEM : 건설 완료",
             result
-        })
+        });
     }
-    else        //설정한 시간 이전
+    else    //설정한 시간 이전
     {
         let remainingTime = buildingUnderConstuction ? buildingUnderConstuction - new Date() : 0;
-        remainingTime = Math.max(0,remainingTime);      //음수시간을 0으로 보정
-        console.log("System : 건설 중 입니다 남은 시간은" + remainingTime + " ms");
-
+        remainingTime = Math.max(0 , remainingTime);    //음수 시간을 0으로 보정
+        console.log("SYSTEM : 건설 중입니다 남은 시간은 " + remainingTime + " ms");
         let result = {
             message : remainingTime
         }
-        res.send({
-            cmd : 1101,
-            message : "SYSTEM : 건설 시작",
+        res.send ({                                  //기본 커맨드로 전송 
+            cmd : 1101, 
+            message : "SYSTEM : 건설 중입니다",
             result
         });
     }
 });
 
 
-//--------------------GAME API--------------------
 
+
+//================= GAME API ===========================
 app.get('/',(req ,res)=>{
 
     let result = {
