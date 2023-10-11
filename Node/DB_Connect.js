@@ -31,7 +31,7 @@ connection.query('SELECT * FROM userid',(err,results,fields)=>{
     
     const dataArray = results;
 
-    console.log('데이터 배율 : ',dataArray[0].index);
+    console.log('데이터 배율 : ',dataArray);
 
 });
 
