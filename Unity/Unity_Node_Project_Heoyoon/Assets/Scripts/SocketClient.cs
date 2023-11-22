@@ -14,6 +14,17 @@ public class  MyData
     public int requestType;
 }
 
+public class InfoData
+{
+    public string type;
+    public InfoParams myParams;
+}
+
+public class InfoParams
+{
+    public string room;
+    public int loopTimeCount;
+}
 
 public class SocketClient : MonoBehaviour
 {
@@ -24,6 +35,8 @@ public class SocketClient : MonoBehaviour
 
     public Text text;
     public InputField inputField;
+
+    public int loopCount;
 
     MyData sendData = new MyData { message = "메세지 보내기" };
     // Start is called before the first frame update
@@ -57,6 +70,13 @@ public class SocketClient : MonoBehaviour
         //Json 데이터를 객체로 역직렬화
         MyData receivedData = JsonConvert.DeserializeObject<MyData>(jsonData);
 
+        InfoData infoData = JsonConvert.DeserializeObject<InfoData>(jsonData);
+
+        if (infoData != null)
+        {
+            string room = infoData.myParams.room;
+            loopCount = infoData.myParams.loopTimeCount;
+        }
         if (receivedData != null && !string.IsNullOrEmpty(receivedData.clientID))
         {
             sendData.clientID = receivedData.clientID;
